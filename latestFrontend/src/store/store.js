@@ -1,9 +1,14 @@
-import {configureStore} from "@reduxjs/toolkit";
-import khaltiSlice from "./khaltiSlice"
+// src/store/store.js
 
-const store=configureStore({
-    reducer:{
-        khalti:khaltiSlice
-    }
-})
-export default store
+import { configureStore } from '@reduxjs/toolkit';
+import khaltiSlice from './khaltiSlice';
+import authSlice from './authSlice';
+
+const store = configureStore({
+  reducer: {
+    khalti: khaltiSlice,
+    auth: authSlice,
+  },
+});
+
+export default store;
