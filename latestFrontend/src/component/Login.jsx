@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../store/authSlice';
-import Signup from './../component/Signup';
+// import Signup from './../component/Signup';
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ export default function Login() {
 
   useEffect(() => {
     if (success) {
-      navigate('/payment');
+      navigate('/product');
     }
   }, [success, navigate]);
 
