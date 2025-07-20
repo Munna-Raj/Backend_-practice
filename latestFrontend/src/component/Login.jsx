@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../store/authSlice';
 // import Signup from './../component/Signup';
+import Signup from './Signup';
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ export default function Login() {
 
         <p style={styles.switchText}>
           Don't have an account?{' '}
-          <button onClick={() => navigate('/')} style={styles.linkButton}>
+          <button onClick={() => navigate('/Signup')} style={styles.linkButton}>
             Signup
           </button>
         </p>
