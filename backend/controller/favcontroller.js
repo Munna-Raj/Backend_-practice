@@ -1,42 +1,38 @@
 import mongoose from 'mongoose';
 import Favorite from '../model/favModel.js';
-import product from '../models/product.js'; 
-// import CourseFavorite from '../models/CourseFavorite.js';
+import Product from '../model/product.js'; 
 
 // Add a product to user's favorites
 export const addFavorite = async (req, res) => {
-  const { productId } = req.body;  // match the key sent from frontend
+  const { productId } = req.body;
   const userId = req.user.id;
+
   console.log("User ID:", userId);
-  console.log("product ID:", productId);
+  console.log("Product ID:", productId);
 
   try {
-    // Validate ObjectId format
     if (!productId || !mongoose.Types.ObjectId.isValid(productId)) {
       return res.status(400).json({ message: 'Invalid product ID format' });
     }
 
-    // Find the product by ID
-    const product = await product.findById(productId);
-
-    if (!product) {
-      return res.status(404).json({ message: 'product not found' });
+    const foundProduct = await Product.findById(productId); 
+    
+    if (!foundProduct) {
+      return res.status(404).json({ message: 'Product not found' });
     }
 
-    // Check if the favorite already exists
     const existingFavorite = await Favorite.findOne({
       userId,
-      productId: product._id,
+      productId: foundProduct._id,
     });
 
     if (existingFavorite) {
       return res.status(400).json({ message: 'Already in favorites' });
     }
 
-    // Create and save the new favorite
     const newFavorite = new Favorite({
       userId,
-      productId: product._id,
+      productId: foundProduct._id,
     });
 
     await newFavorite.save();
@@ -48,69 +44,17 @@ export const addFavorite = async (req, res) => {
   }
 };
 
-// export const addCourseFavorite = async (req, res) => {
-//   const { courseId } = req.body;  // match the key sent from frontend
-//   const userId = req.user.id;
-  
-//   console.log("User ID:", userId);
-//   console.log("Course ID:", courseId);
-
-//   try {
-//     // Validate ObjectId format
-//     if (!courseId || !mongoose.Types.ObjectId.isValid(courseId)) {
-//       return res.status(400).json({ message: 'Invalid course ID format' });
-//     }
-
-//     // Check if the course exists and if it's already in the user's favorites
-//     const existingFavorite = await CourseFavorite.findOne({
-//       userId,
-//       courseId: mongoose.Types.ObjectId(courseId),
-//     });
-
-//     if (existingFavorite) {
-//       return res.status(400).json({ message: 'Course is already in your favorites' });
-//     }
-
-//     // Find the course by ID
-//     const course = await Course.findById(courseId);
-
-//     if (!course) {
-//       return res.status(404).json({ message: 'Course not found' });
-//     }
-
-//     // Create and save the new course favorite
-//     const newFavorite = new CourseFavorite({
-//       userId,
-//       courseId: course._id,
-//     });
-
-//     await newFavorite.save();
-
-//     // Send response with favorite details
-//     res.status(201).json({
-//       message: 'Course added to favorites',
-//       favorite: {
-//         userId,
-//         courseId: course._id,
-//         courseName: course.name,  // Example: Add the course's name to the response
-//       },
-//     });
-//   } catch (err) {
-//     console.error("Error adding course favorite:", err);
-//     res.status(500).json({ message: 'Error adding course to favorites', error: err.message });
-//   }
-// };
-
 // Remove a product from user's favorites
 export const removeFavorite = async (req, res) => {
   const { productId } = req.body;
+  const userId = req.user.id;
 
   try {
-    const deleted = await Favorite.findOneAndDelete({ productId });
+    const deleted = await Favorite.findOneAndDelete({ userId, productId });
 
     if (!deleted) {
       return res.status(404).json({ message: 'Favorite not found' });
-    } 
+    }
 
     res.status(200).json({ message: 'Removed from favorites' });
   } catch (err) {
@@ -120,10 +64,9 @@ export const removeFavorite = async (req, res) => {
 
 // Get all favorites for a user
 export const getFavorites = async (req, res) => {
-  const userId = req.user.id; // Get user ID from authenticated request
+  const userId = req.user.id;
 
   try {
-    // Find all favorites for the user and populate product details
     const favorites = await Favorite.find({ userId }).populate('productId');
 
     if (favorites.length === 0) {
@@ -136,12 +79,12 @@ export const getFavorites = async (req, res) => {
   }
 };
 
+// Get all favorites for all users (admin)
 export const getAllFavorites = async (req, res) => {
   try {
-    // Fetch all favorite records, with both user and product populated
     const favorites = await Favorite.find()
       .populate('productId')
-      .populate('userId'); // optional: if you want user info too
+      .populate('userId');
 
     res.status(200).json({
       message: 'All favorites fetched successfully',
