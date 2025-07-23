@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import Login from './Login';
 import Signup from './Signup';
 import ProductList from './../product/ProductForm';
+import Favorites from './../product/favorites';
+
 
 export default function Nav() {
   return (
@@ -21,12 +23,18 @@ export default function Nav() {
             </div>
           </div>
 
-          {/* Right: Order Now Button & Account */}
+          {/* Right: Favorites + Account */}
           <div className="flex items-center space-x-4">
-            <Link to="/payment" className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition">
-              Order Now
+
+            {/* ✅ View Favorites Button */}
+            <Link
+              to="/Favorites"
+              className="text-gray-700 hover:text-red-500 font-medium"
+            >
+              ❤️ Favorites
             </Link>
 
+            {/* Account Dropdown */}
             <div className="relative group">
               <button className="flex items-center space-x-2 text-gray-700 hover:text-red-500 focus:outline-none">
                 <span>Account</span>

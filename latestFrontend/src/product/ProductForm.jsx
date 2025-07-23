@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 // import SelectPaymentType from './../pages/Payment';
 import SelectPaymentType from './../pages/SelectPaymentType';
 
-
-
 export default function ProductList() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,6 +24,22 @@ export default function ProductList() {
 
     fetchProducts();
   }, []);
+
+  // ✅ Add to favorites handler
+  const handleAddToFavorites = async (productId) => {
+    try {
+      const userId = '68747010de86c89aea15c0f6'; // TEMP user ID, replace with actual auth system
+      const response = await axios.post('http://localhost:5000/api/favorites/add', {
+        productId,
+        userId,
+      });
+
+      alert(response.data.message || 'Added to favorites');
+    } catch (err) {
+      console.error('Failed to add favorite:', err);
+      alert(err?.response?.data?.message || 'Something went wrong');
+    }
+  };
 
   if (isLoading) {
     return (
@@ -111,22 +125,30 @@ export default function ProductList() {
                     </span>
                   </div>
 
-            <button
-               onClick={() => {
-                  if (product.Stock > 0) {
-                    window.location.href = '/Payment';
-                  }
-                }}
-                className={`block text-center w-full mt-4 py-2 rounded ${
-                  product.Stock > 0
-                    ? 'bg-blue-500 text-white hover:bg-blue-600'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                } transition`}
-                disabled={product.Stock === 0}
-              >
-                {product.Stock > 0 ? 'Buy Now' : 'Out of Stock'}
-          </button>
+               
+                  <button
+                    onClick={() => {
+                      if (product.Stock > 0) {
+                        window.location.href = '/Payment';
+                      }
+                    }}
+                    className={`block text-center w-full mt-4 py-2 rounded ${
+                      product.Stock > 0
+                        ? 'bg-blue-500 text-white hover:bg-blue-600'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    } transition`}
+                    disabled={product.Stock === 0}
+                  >
+                    {product.Stock > 0 ? 'Buy Now' : 'Out of Stock'}
+                  </button>
 
+                  
+                  <button
+                    onClick={() => handleAddToFavorites(product._id)}
+                    className="block text-center w-full mt-2 py-2 rounded bg-pink-500 text-white hover:bg-pink-600 transition"
+                  >
+                    Add to Favorites
+                  </button>
                 </div>
               </div>
             ))}

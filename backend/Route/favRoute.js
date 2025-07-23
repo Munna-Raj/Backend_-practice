@@ -14,10 +14,10 @@ const router = express.Router();
 
 
 
-router.post('/add', isAuthenticated, addFavorite);
-router.delete('/remove', isAuthenticated, removeFavorite);
-router.get('/my-favorites', isAuthenticated, getFavorites);
-router.get('/all-favorites', isAuthenticated, getAllFavorites);
+router.post('/add',  addFavorite);
+router.delete('/remove', removeFavorite);
+router.get('/my-favorites',  getFavorites);
+router.get('/all-favorites', getAllFavorites);
 
 
 

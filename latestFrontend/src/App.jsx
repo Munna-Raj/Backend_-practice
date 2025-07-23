@@ -9,6 +9,9 @@ import Login from "./component/Login";
 import ProductList from "./product/ProductForm";
 import Nav from "./component/Nav";
 import Footer from "./component/footer";
+import Favorite from "../../backend/model/favModel";
+import Favorites from './product/favorites';
+
 
 function App() {
   return (
@@ -23,6 +26,8 @@ function App() {
           <Route path="/khalti" element={<Khalti />} />
           <Route path="/success" element={<PaymentSuccess />} />
           <Route path="/product" element={<ProductList />} />
+          <Route path="/Favorites" element={<Favorites />} />
+          
         </Routes>
          <Footer />
       </BrowserRouter>

@@ -5,7 +5,7 @@ import Product from '../model/product.js';
 // Add a product to user's favorites
 export const addFavorite = async (req, res) => {
   const { productId } = req.body;
-  const userId = req.user.id;
+  const userId = req.body.userId;
 
   console.log("User ID:", userId);
   console.log("Product ID:", productId);
