@@ -26,20 +26,24 @@ export default function ProductList() {
   }, []);
 
   // ✅ Add to favorites handler
-  const handleAddToFavorites = async (productId) => {
-    try {
-      const userId = '68747010de86c89aea15c0f6'; // TEMP user ID, replace with actual auth system
-      const response = await axios.post('http://localhost:5000/api/favorites/add', {
-        productId,
-        userId,
-      });
+const handleAddToFavorites = async (productId) => {
+  try {
+    const token = localStorage.getItem('token');
+    const decoded = JSON.parse(atob(token.split('.')[1]));
+    const userId = decoded.id; // or decoded._id depending on how you set JWT
 
-      alert(response.data.message || 'Added to favorites');
-    } catch (err) {
-      console.error('Failed to add favorite:', err);
-      alert(err?.response?.data?.message || 'Something went wrong');
-    }
-  };
+    const response = await axios.post(
+      'http://localhost:5000/api/favorites/add',
+      { productId, userId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    alert(response.data.message || 'Added to favorites');
+  } catch (err) {
+    console.error('Failed to add favorite:', err);
+    alert(err?.response?.data?.message || 'Something went wrong');
+  }
+};
 
   if (isLoading) {
     return (
