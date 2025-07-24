@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-// import SelectPaymentType from './../pages/Payment';
-import SelectPaymentType from './../pages/SelectPaymentType';
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
@@ -25,25 +22,31 @@ export default function ProductList() {
     fetchProducts();
   }, []);
 
-  // ✅ Add to favorites handler
-const handleAddToFavorites = async (productId) => {
-  try {
-    const token = localStorage.getItem('token');
-    const decoded = JSON.parse(atob(token.split('.')[1]));
-    const userId = decoded.id; // or decoded._id depending on how you set JWT
+  // Fixed Add to Favorites function with token header
+  const handleAddToFavorites = async (productId) => {
+    try {
+      const token = localStorage.getItem('token'); // get JWT token from storage
+      if (!token) {
+        alert('Please login first.');
+        return;
+      }
 
-    const response = await axios.post(
-      'http://localhost:5000/api/favorites/add',
-      { productId, userId },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+      const response = await axios.post(
+        'http://localhost:5000/api/favorites/add',
+        { productId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    alert(response.data.message || 'Added to favorites');
-  } catch (err) {
-    console.error('Failed to add favorite:', err);
-    alert(err?.response?.data?.message || 'Something went wrong');
-  }
-};
+      alert(response.data.message || 'Added to favorites');
+    } catch (err) {
+      console.error('Failed to add favorite:', err.response?.data || err.message);
+      alert(err.response?.data?.msg || 'Something went wrong while adding favorite.');
+    }
+  };
 
   if (isLoading) {
     return (
@@ -129,11 +132,10 @@ const handleAddToFavorites = async (productId) => {
                     </span>
                   </div>
 
-               
                   <button
                     onClick={() => {
                       if (product.Stock > 0) {
-                        window.location.href = '/Payment';
+                        window.location.href = '/payment';
                       }
                     }}
                     className={`block text-center w-full mt-4 py-2 rounded ${
@@ -146,12 +148,11 @@ const handleAddToFavorites = async (productId) => {
                     {product.Stock > 0 ? 'Buy Now' : 'Out of Stock'}
                   </button>
 
-                  
                   <button
                     onClick={() => handleAddToFavorites(product._id)}
                     className="block text-center w-full mt-2 py-2 rounded bg-pink-500 text-white hover:bg-pink-600 transition"
                   >
-                    Add to Favorites
+                    ❤️ Add to Favorites
                   </button>
                 </div>
               </div>
