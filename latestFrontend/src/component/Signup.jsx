@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { registerUser } from '../store/authSlice'; // Adjust path if needed
 
 export default function Signup() {
@@ -124,12 +124,12 @@ export default function Signup() {
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Already have an account?{' '}
-          <button
-            onClick={() => navigate('/login')}
+          <Link
+            to="/login"
             className="font-semibold text-indigo-600 hover:text-indigo-500"
           >
             Login
-          </button>
+          </Link>
         </p>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Change these URLs to match your backend
 const REGISTER_URL = 'http://localhost:5000/api/auth/register';
 const LOGIN_URL = 'http://localhost:5000/api/auth/login';
 
@@ -29,20 +28,25 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+const token = localStorage.getItem('token');
+const user = localStorage.getItem('user');
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: null,
-    token: null,
+    user: user ? JSON.parse(user) : null,
+    token: token || null,
     loading: false,
     error: null,
-    success: false,
+    success: !!token,
   },
   reducers: {
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.success = false;
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
     },
   },
   extraReducers: (builder) => {
@@ -55,6 +59,11 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user;
         state.success = true;
+        if (action.payload.token) {
+          state.token = action.payload.token;
+          localStorage.setItem('token', action.payload.token);
+        }
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -70,6 +79,8 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.user = action.payload.user;
         state.success = true;
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
