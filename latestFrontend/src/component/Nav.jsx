@@ -42,7 +42,7 @@ export default function Nav() {
             </button>
 
             {/* Dropdown Menu */}
-            {dropdownOpen && (
+            {/* {dropdownOpen && (
               <div className="absolute right-0 mt-10 w-32 bg-white rounded-md shadow-lg border border-gray-200 z-50">
                 <Link
                   to="/Signup"
@@ -59,7 +59,9 @@ export default function Nav() {
                   Login
                 </Link>
               </div>
-            )}
+            )} */}
+
+            
           </div>
         </div>
       </div>

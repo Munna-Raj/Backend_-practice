@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [addingFavorites, setAddingFavorites] = useState({});
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -15,22 +19,28 @@ export default function ProductList() {
         setError('Failed to load products. Please try again later.');
         console.error('Error fetching products:', err);
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     fetchProducts();
   }, []);
 
-  // Fixed Add to Favorites function with token header
   const handleAddToFavorites = async (productId) => {
-    try {
-      const token = localStorage.getItem('token'); // get JWT token from storage
-      if (!token) {
-        alert('Please login first.');
-        return;
-      }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.warn('Please login first.');
+      return;
+    }
 
+    if (favorites.includes(productId)) {
+      toast.info('Already in favorites.');
+      return;
+    }
+
+    setAddingFavorites((prev) => ({ ...prev, [productId]: true }));
+
+    try {
       const response = await axios.post(
         'http://localhost:5000/api/favorites/add',
         { productId },
@@ -41,14 +51,17 @@ export default function ProductList() {
         }
       );
 
-      alert(response.data.message || 'Added to favorites');
+      toast.success(response.data.message || 'Added to favorites');
+      setFavorites((prev) => [...prev, productId]);
     } catch (err) {
       console.error('Failed to add favorite:', err.response?.data || err.message);
-      alert(err.response?.data?.msg || 'Something went wrong while adding favorite.');
+      toast.error(err.response?.data?.msg || 'Failed to add favorite.');
+    } finally {
+      setAddingFavorites((prev) => ({ ...prev, [productId]: false }));
     }
   };
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -61,7 +74,7 @@ export default function ProductList() {
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="bg-white p-6 rounded-lg shadow-md max-w-md text-center">
           <p className="text-red-500 mb-4">{error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
           >
@@ -74,6 +87,7 @@ export default function ProductList() {
 
   return (
     <div className="bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <ToastContainer />
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
@@ -150,9 +164,14 @@ export default function ProductList() {
 
                   <button
                     onClick={() => handleAddToFavorites(product._id)}
-                    className="block text-center w-full mt-2 py-2 rounded bg-pink-500 text-white hover:bg-pink-600 transition"
+                    disabled={addingFavorites[product._id]}
+                    className={`block text-center w-full mt-2 py-2 rounded transition ${
+                      favorites.includes(product._id)
+                        ? 'bg-pink-600 text-white'
+                        : 'bg-pink-500 text-white hover:bg-pink-600'
+                    }`}
                   >
-                    ❤️ Add to Favorites
+                    {favorites.includes(product._id) ? '❤️ Favorited' : '❤️ Add to Favorites'}
                   </button>
                 </div>
               </div>
