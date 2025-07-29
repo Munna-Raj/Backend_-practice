@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { registerUser } from '../store/authSlice'; // Adjust path if needed
@@ -13,6 +13,13 @@ export default function Signup() {
     email: '',
     password: '',
   });
+
+  useEffect(() => {
+    if (success) {
+      // Navigate to login after successful signup
+      navigate('/login');
+    }
+  }, [success, navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -117,7 +124,7 @@ export default function Signup() {
                 error ? 'text-red-600' : 'text-green-600'
               }`}
             >
-              {error || 'Signup successful!'}
+              {error || 'Signup successful! Redirecting to login...'}
             </p>
           )}
         </form>

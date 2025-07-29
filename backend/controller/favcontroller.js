@@ -1,99 +1,98 @@
-import mongoose from 'mongoose';
-import Favorite from '../model/favModel.js';
-import Product from '../model/product.js'; 
+import Product from '../model/product.js';
+import User from '../model/User.js';
 
-// Add a product to user's favorites
-export const addFavorite = async (req, res) => {
-  const { productId } = req.body;
-  const userId = req.body.userId;
 
-  console.log("User ID:", userId);
-  console.log("Product ID:", productId);
+// Add product to user's favorites
+export const addToFavorites = async (req, res) => {
+  const { userId, productId } = req.body;
 
   try {
-    if (!productId || !mongoose.Types.ObjectId.isValid(productId)) {
-      return res.status(400).json({ message: 'Invalid product ID format' });
+    const user = await User.findById(userId);
+    const product = await Product.findById(productId);
+
+    if (!user || !product) {
+      return res.status(404).json({ message: 'User or Product not found' });
     }
 
-    const foundProduct = await Product.findById(productId); 
-    
-    if (!foundProduct) {
-      return res.status(404).json({ message: 'Product not found' });
+    if (user.favorites.includes(productId)) {
+      return res.status(400).json({ message: 'Product already favorited' });
     }
 
-    const existingFavorite = await Favorite.findOne({
-      userId,
-      productId: foundProduct._id,
-    });
+    user.favorites.push(productId);
+    await user.save();
 
-    if (existingFavorite) {
-      return res.status(400).json({ message: 'Already in favorites' });
-    }
-
-    const newFavorite = new Favorite({
-      userId,
-      productId: foundProduct._id,
-    });
-
-    await newFavorite.save();
-
-    res.status(201).json({ message: 'Added to favorites', favorite: newFavorite });
+    res.status(200).json({ message: 'Product added to favorites', favorites: user.favorites });
   } catch (err) {
-    console.error("Error adding favorite:", err);
-    res.status(500).json({ message: 'Error adding to favorites', error: err.message });
+    res.status(500).json({ message: 'Internal Server Error', error: err.message });
   }
 };
 
-// Remove a product from user's favorites
-export const removeFavorite = async (req, res) => {
-  const { productId } = req.body;
-  const userId = req.user.id;
-
-  try {
-    const deleted = await Favorite.findOneAndDelete({ userId, productId });
-
-    if (!deleted) {
-      return res.status(404).json({ message: 'Favorite not found' });
-    }
-
-    res.status(200).json({ message: 'Removed from favorites' });
-  } catch (err) {
-    res.status(500).json({ message: 'Error removing favorite', error: err.message });
-  }
-};
-
-// Get all favorites for a user
+// Get all favorite products for a user
 export const getFavorites = async (req, res) => {
-  const userId = req.user.id;
+  const { userId } = req.params;
 
   try {
-    const favorites = await Favorite.find({ userId }).populate('productId');
+    const user = await User.findById(userId).populate('favorites');
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
-    if (favorites.length === 0) {
-      return res.status(404).json({ message: 'No favorites found for this user' });
-    }
-
-    res.status(200).json({ message: 'Favorites fetched successfully', data: favorites });
+    res.status(200).json({ favorites: user.favorites });
   } catch (err) {
-    res.status(500).json({ message: 'Error fetching favorites', error: err.message });
+    res.status(500).json({ message: 'Internal Server Error', error: err.message });
   }
 };
 
-// Get all favorites for all users (admin)
-export const getAllFavorites = async (req, res) => {
-  try {
-    const favorites = await Favorite.find()
-      .populate('productId')
-      .populate('userId');
+// Get a specific favorite by product ID
+export const getFavoriteById = async (req, res) => {
+  const { userId, productId } = req.params;
 
-    res.status(200).json({
-      message: 'All favorites fetched successfully',
-      data: favorites,
-    });
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const isFavorited = user.favorites.includes(productId);
+    if (!isFavorited) {
+      return res.status(404).json({ message: 'Product not found in favorites' });
+    }
+
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    res.status(200).json({ favorite: product });
   } catch (err) {
-    res.status(500).json({
-      message: 'Error fetching all favorites',
-      error: err.message,
-    });
+    res.status(500).json({ message: 'Internal Server Error', error: err.message });
+  }
+};
+
+// Remove a product from favorites
+export const removeFromFavorites = async (req, res) => {
+  const { userId, productId } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.favorites = user.favorites.filter(id => id.toString() !== productId);
+    await user.save();
+
+    res.status(200).json({ message: 'Removed from favorites', favorites: user.favorites });
+  } catch (err) {
+    res.status(500).json({ message: 'Internal Server Error', error: err.message });
+  }
+};
+
+// Clear all favorites for a user
+export const clearFavorites = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.favorites = [];
+    await user.save();
+
+    res.status(200).json({ message: 'All favorites cleared', favorites: [] });
+  } catch (err) {
+    res.status(500).json({ message: 'Internal Server Error', error: err.message });
   }
 };

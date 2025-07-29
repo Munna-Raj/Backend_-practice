@@ -44,11 +44,11 @@ export default function ProductList() {
       const response = await axios.post(
         'http://localhost:5000/api/favorites/add',
         { productId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        // {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // }
       );
 
       toast.success(response.data.message || 'Added to favorites');
