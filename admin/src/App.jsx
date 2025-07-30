@@ -1,21 +1,31 @@
-import { useState } from 'react'
-import React from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import AdminNav from './component/AdminNav.jsx'
+import { useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React from "react";
+import "./App.css";
+
+import AdminNav from "./component/AdminNav.jsx";
+import ProductTable from "./component/ProductTable.jsx";
+
+import Users from "./component/Users.jsx";
+import AddProduct from "./component/AddProduct.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
-    <>
-    heello
- <BrowserRouter>
-      <AdminNav/>
-  </BrowserRouter>
-  </>
-  )
+    <BrowserRouter>
+      <div>
+       
+        <AdminNav />
+
+        <Routes>
+          <Route path="/products" element={<ProductTable />} />
+          <Route path="/users" element={<Users/>} />
+          <Route path="/AddProduct" element={<AddProduct />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

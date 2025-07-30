@@ -49,3 +49,47 @@ export const createProduct = async (req, res) => {
         });
     }
 };
+
+
+
+
+// Update (Edit) Product
+export const updateProduct = async (req, res) => {
+    try {
+        const { id } = req.params;  // Get product id from URL
+        const updatedData = req.body;  // Data to update
+
+        const updatedProduct = await Product.findByIdAndUpdate(id, updatedData, {
+            new: true,      // return updated document
+            runValidators: true // validate data before saving
+        });
+
+        if (!updatedProduct) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.status(200).json(updatedProduct);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+
+
+// Delete Product
+export const deleteProduct = async (req, res) => {
+    try {
+        const { id } = req.params; // Get product id from URL
+
+        const deletedProduct = await Product.findByIdAndDelete(id);
+
+        if (!deletedProduct) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.status(200).json({ message: 'Product deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
