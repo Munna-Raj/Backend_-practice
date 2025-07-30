@@ -31,9 +31,14 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Add New Product</h2>
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
+    <div className="p-6 flex gap-10 max-w-7xl mx-auto">
+      {/* Form section */}
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 max-w-md flex-1"
+        autoComplete="off"
+      >
+        <h2 className="text-2xl font-bold mb-4">Add New Product</h2>
         <input
           type="text"
           name="ProductName"
@@ -92,6 +97,45 @@ export default function AddProduct() {
           Save Product
         </button>
       </form>
+
+      {/* Side preview panel */}
+      <div className="flex-1 border p-4 rounded shadow max-w-md bg-white">
+        <h3 className="text-xl font-semibold mb-4">Product Preview</h3>
+
+        {formData.Thumbnail ? (
+          <img
+            src={formData.Thumbnail}
+            alt={formData.ProductName || "Thumbnail"}
+            className="w-full h-48 object-cover rounded mb-4"
+          />
+        ) : (
+          <div className="w-full h-48 bg-gray-200 flex items-center justify-center rounded mb-4 text-gray-500">
+            No Image
+          </div>
+        )}
+
+        <p>
+          <strong>Name:</strong> {formData.ProductName || "-"}
+        </p>
+        <p>
+          <strong>Code:</strong> {formData.ProductCode || "-"}
+        </p>
+        <p>
+          <strong>Price:</strong>{" "}
+          {formData.Price ? `$${formData.Price}` : "-"}
+        </p>
+        <p>
+          <strong>Stock:</strong> {formData.Stock || "-"}
+        </p>
+        <p>
+          <strong>Description:</strong>{" "}
+          {formData.Description ? (
+            <span className="whitespace-pre-wrap">{formData.Description}</span>
+          ) : (
+            "-"
+          )}
+        </p>
+      </div>
     </div>
   );
 }
