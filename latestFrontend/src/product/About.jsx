@@ -4,12 +4,11 @@ export default function About() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-100 via-white to-green-50 py-12 px-6">
       <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl p-10">
-        {/* Header */}
+       
         <h1 className="text-5xl font-extrabold text-center text-green-700 mb-10">
           About <span className="text-green-900">My Food Store</span>
         </h1>
 
-        {/* Intro */}
         <p className="text-lg text-gray-700 text-center max-w-3xl mx-auto mb-10 leading-relaxed">
           Welcome to <span className="font-semibold">My Food Store</span>, your
           trusted destination for fresh, hygienic, and delicious food products.
@@ -17,7 +16,7 @@ export default function About() {
           with the vision of bringing the best food shopping experience to your fingertips.
         </p>
 
-        {/* Mission & Vision */}
+       
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14">
           <div className="bg-green-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
             <h2 className="text-2xl font-bold text-green-800 mb-4">Our Mission</h2>
@@ -36,7 +35,7 @@ export default function About() {
           </div>
         </div>
 
-        {/* Features */}
+        
         <div className="mb-14">
           <h2 className="text-3xl font-bold text-center text-green-700 mb-8">
             Why Choose Us?
@@ -62,7 +61,7 @@ export default function About() {
           </div>
         </div>
 
-        {/* Developer Section */}
+        
         <div className="border-t pt-10">
           <h2 className="text-3xl font-bold text-center text-green-700 mb-8">
             Meet the Developer
