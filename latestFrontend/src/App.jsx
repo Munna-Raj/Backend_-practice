@@ -10,6 +10,7 @@ import ProductList from "./product/ProductForm";
 import Nav from "./component/Nav";
 import Footer from "./component/footer";
 import Account from "./Account/account";
+import FoodStoreLanding from "./product/FoodStoreLanding";
 // import Favorite from "../../backend/model/favModel";
 // import Favorites from './product/favorites';
 
@@ -21,6 +22,7 @@ function App() {
         <Nav />
 
         <Routes>
+          <Route path="/" element={<FoodStoreLanding />} />
           <Route path="signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/payment" element={<SelectPaymentType />} />

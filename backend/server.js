@@ -6,6 +6,7 @@ import KhaltiRoute from "./Route/khaltiRoute.js";
 import AuthicationRoute from "./Route/AuthicationRoute.js";
 import Productroute from "./Route/Productroute.js";
 import FavoriteRoute from "./Route/favRoute.js";
+import OrderRoute from "./Route/orderRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -22,7 +23,7 @@ app.use("/api/khalti", KhaltiRoute);
 app.use("/api/auth", AuthicationRoute);
 app.use("/api/product", Productroute);
 app.use("/api/favorites", FavoriteRoute);
-  
+app.use("/api/orders", OrderRoute);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

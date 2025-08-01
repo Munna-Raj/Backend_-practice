@@ -14,7 +14,13 @@ export default function AdminPanel() {
   const [isOpen, setIsOpen] = useState(true);
   const [products, setProducts] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState({ ProductName: "", Price: "" });
+  const [formData, setFormData] = useState({
+    ProductName: "",
+    ProductCode: "",
+    Price: "",
+    Stock: "",
+    Thumbnail: "",
+  });
 
   // Sidebar links
   const links = [
@@ -53,7 +59,13 @@ export default function AdminPanel() {
   // Handle edit
   const handleEdit = (product) => {
     setEditingId(product._id);
-    setFormData({ ProductName: product.ProductName, Price: product.Price });
+    setFormData({
+      ProductName: product.ProductName || "",
+      ProductCode: product.ProductCode || "",
+      Price: product.Price || "",
+      Stock: product.Stock || "",
+      Thumbnail: product.Thumbnail || "",
+    });
   };
 
   // Handle update
@@ -108,13 +120,17 @@ export default function AdminPanel() {
           <thead>
             <tr className="bg-gray-100">
               <th className="border p-2 text-left">Name</th>
+              <th className="border p-2 text-left">Product Code</th>
               <th className="border p-2 text-left">Price</th>
-              <th className="border p-2">Actions</th>
+              <th className="border p-2 text-left">Stock</th>
+              <th className="border p-2 text-left">Thumbnail</th>
+              <th className="border p-2 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {products.map((product) => (
               <tr key={product._id}>
+                {/* Product Name */}
                 <td className="border p-2" style={{ color: "black" }}>
                   {editingId === product._id ? (
                     <input
@@ -129,6 +145,24 @@ export default function AdminPanel() {
                     product.ProductName
                   )}
                 </td>
+
+                {/* Product Code */}
+                <td className="border p-2" style={{ color: "black" }}>
+                  {editingId === product._id ? (
+                    <input
+                      type="text"
+                      value={formData.ProductCode}
+                      style={{ color: "black" }}
+                      onChange={(e) =>
+                        setFormData({ ...formData, ProductCode: e.target.value })
+                      }
+                    />
+                  ) : (
+                    product.ProductCode
+                  )}
+                </td>
+
+                {/* Price */}
                 <td className="border p-2" style={{ color: "black" }}>
                   {editingId === product._id ? (
                     <input
@@ -143,6 +177,46 @@ export default function AdminPanel() {
                     product.Price
                   )}
                 </td>
+
+                {/* Stock */}
+                <td className="border p-2" style={{ color: "black" }}>
+                  {editingId === product._id ? (
+                    <input
+                      type="number"
+                      value={formData.Stock}
+                      style={{ color: "black" }}
+                      onChange={(e) =>
+                        setFormData({ ...formData, Stock: e.target.value })
+                      }
+                    />
+                  ) : (
+                    product.Stock
+                  )}
+                </td>
+
+                {/* Thumbnail */}
+                <td className="border p-2" style={{ color: "black" }}>
+                  {editingId === product._id ? (
+                    <input
+                      type="text"
+                      value={formData.Thumbnail}
+                      style={{ color: "black" }}
+                      onChange={(e) =>
+                        setFormData({ ...formData, Thumbnail: e.target.value })
+                      }
+                    />
+                  ) : product.Thumbnail ? (
+                    <img
+                      src={product.Thumbnail}
+                      alt={product.ProductName}
+                      className="w-12 h-12 object-cover mx-auto rounded"
+                    />
+                  ) : (
+                    <span className="text-gray-400">No Image</span>
+                  )}
+                </td>
+
+                {/* Actions */}
                 <td className="border p-2 text-center">
                   {editingId === product._id ? (
                     <button
