@@ -24,7 +24,7 @@ export default function Nav() {
             <div className="hidden sm:flex space-x-8 ml-10">
               <Link to="/product" className="text-gray-700 hover:text-red-500 font-medium">Home</Link>
               <Link to="/Product" className="text-gray-700 hover:text-red-500 font-medium">Menu</Link>
-              <Link to="/about" className="text-gray-700 hover:text-red-500 font-medium">About</Link>
+              <Link to="/About" className="text-gray-700 hover:text-red-500 font-medium">About</Link>
               <Link to="/contact" className="text-gray-700 hover:text-red-500 font-medium">Contact</Link>
             </div>
           </div>
