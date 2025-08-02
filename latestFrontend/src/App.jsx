@@ -12,6 +12,8 @@ import Footer from "./component/footer";
 import Account from "./Account/account";
 import FoodStoreLanding from "./product/FoodStoreLanding";
 import About from "./product/About";
+import Contact from "./product/Contact";
+
 // import Favorite from "../../backend/model/favModel";
 // import Favorites from './product/favorites';
 
@@ -32,6 +34,7 @@ function App() {
           <Route path="/product" element={<ProductList />} />
           <Route path="/account" element={<Account />} />
           <Route path="/About" element={<About />} />
+          <Route path="/Contact" element={<Contact />} />
           {/* <Route path="/Favorites" element={<Favorites />} /> */}
           
         </Routes>

@@ -10,6 +10,9 @@ export default function ProductList() {
   const [error, setError] = useState(null);
   const [addingFavorites, setAddingFavorites] = useState({});
 
+  // Use your actual logged-in userId here
+  const userId = 'YOUR_USER_ID_HERE';
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -23,13 +26,23 @@ export default function ProductList() {
       }
     };
 
+    const fetchFavorites = async () => {
+      if (!userId) return;
+      try {
+        const res = await axios.get(`http://localhost:5000/api/favorites/${userId}`);
+        setFavorites(res.data.favorites.map(fav => fav._id || fav)); // get IDs of favorites
+      } catch (err) {
+        console.error('Error fetching favorites:', err);
+      }
+    };
+
     fetchProducts();
-  }, []);
+    fetchFavorites();
+  }, [userId]);
 
   const handleAddToFavorites = async (productId) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      toast.warn('Please login first.');
+    if (!userId) {
+      toast.warn('User ID not set. Please login.');
       return;
     }
 
@@ -43,19 +56,14 @@ export default function ProductList() {
     try {
       const response = await axios.post(
         'http://localhost:5000/api/favorites/add',
-        { productId },
-        // {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`,
-        //   },
-        // }
+        { userId, productId }
       );
 
       toast.success(response.data.message || 'Added to favorites');
       setFavorites((prev) => [...prev, productId]);
     } catch (err) {
       console.error('Failed to add favorite:', err.response?.data || err.message);
-      toast.error(err.response?.data?.msg || 'Failed to add favorite.');
+      toast.error(err.response?.data?.message || 'Failed to add favorite.');
     } finally {
       setAddingFavorites((prev) => ({ ...prev, [productId]: false }));
     }

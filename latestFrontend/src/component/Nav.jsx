@@ -25,7 +25,7 @@ export default function Nav() {
               <Link to="/product" className="text-gray-700 hover:text-red-500 font-medium">Home</Link>
               <Link to="/Product" className="text-gray-700 hover:text-red-500 font-medium">Menu</Link>
               <Link to="/About" className="text-gray-700 hover:text-red-500 font-medium">About</Link>
-              <Link to="/contact" className="text-gray-700 hover:text-red-500 font-medium">Contact</Link>
+              <Link to="/Contact" className="text-gray-700 hover:text-red-500 font-medium">Contact</Link>
             </div>
           </div>
 
