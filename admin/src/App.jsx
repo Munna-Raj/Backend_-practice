@@ -1,29 +1,42 @@
 import { useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import React from "react";
 import "./App.css";
 
 import AdminNav from "./component/AdminNav.jsx";
 import ProductTable from "./component/ProductTable.jsx";
-
 import Users from "./component/Users.jsx";
 import AddProduct from "./component/AddProduct.jsx";
+import AdminLogin from "./component/AdminLogin.jsx";
 
-function App() {
-  const [count, setCount] = useState(0);
+// Layout component that conditionally shows AdminNav
+function Layout({ children }) {
+  const location = useLocation();
+
+  // Define routes where the sidebar should be hidden
+  const hideSidebarRoutes = ["/"]; // Login page
+
+  const shouldHideSidebar = hideSidebarRoutes.includes(location.pathname);
 
   return (
-    <BrowserRouter>
-      <div>
-       
-        <AdminNav />
+    <div className="flex">
+      {!shouldHideSidebar && <AdminNav />}
+      <div className="flex-1">{children}</div>
+    </div>
+  );
+}
 
+function App() {
+  return (
+    <BrowserRouter>
+      <Layout>
         <Routes>
+          <Route path="/" element={<AdminLogin />} />
           <Route path="/products" element={<ProductTable />} />
-          <Route path="/users" element={<Users/>} />
-          <Route path="/AddProduct" element={<AddProduct />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/addproduct" element={<AddProduct />} />
         </Routes>
-      </div>
+      </Layout>
     </BrowserRouter>
   );
 }

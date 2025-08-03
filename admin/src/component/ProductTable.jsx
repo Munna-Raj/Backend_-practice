@@ -28,7 +28,7 @@ export default function AdminPanel() {
     { name: "Orders", href: "/admin/orders", icon: <UtensilsCrossed className="w-5 h-5" /> },
     { name: "Products", href: "/admin/products", icon: <Package className="w-5 h-5" /> },
     { name: "Users", href: "/admin/users", icon: <Users className="w-5 h-5" /> },
-    { name: "Reports", href: "/admin/reports", icon: <BarChart3 className="w-5 h-5" /> },
+    { name: "AddProduct", href: "/admin/AddProduct", icon: <BarChart3 className="w-5 h-5" /> },
   ];
 
   // Fetch all products

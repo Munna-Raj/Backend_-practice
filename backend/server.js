@@ -8,6 +8,9 @@ import Productroute from "./Route/Productroute.js";
 import FavoriteRoute from "./Route/favRoute.js";
 import OrderRoute from "./Route/orderRoutes.js";
 
+import adminRoutes from "./Route/adminRoutes.js"
+// import protectedAdminRoutes from "./routes/protectedRoutes.js"; // uncomment if you have this file
+
 dotenv.config();
 connectDB();
 
@@ -24,6 +27,9 @@ app.use("/api/auth", AuthicationRoute);
 app.use("/api/product", Productroute);
 app.use("/api/favorites", FavoriteRoute);
 app.use("/api/orders", OrderRoute);
+
+
+app.use("/api/admin", adminRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
