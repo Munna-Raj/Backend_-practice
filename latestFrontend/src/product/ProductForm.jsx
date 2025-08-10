@@ -10,7 +10,7 @@ export default function ProductList() {
   const [error, setError] = useState(null);
   const [addingFavorites, setAddingFavorites] = useState({});
 
-  // Use your actual logged-in userId here
+  // Replace with logged-in user ID
   const userId = 'YOUR_USER_ID_HERE';
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function ProductList() {
       if (!userId) return;
       try {
         const res = await axios.get(`http://localhost:5000/api/favorites/${userId}`);
-        setFavorites(res.data.favorites.map(fav => fav._id || fav)); // get IDs of favorites
+        setFavorites(res.data.favorites.map(fav => fav._id || fav));
       } catch (err) {
         console.error('Error fetching favorites:', err);
       }
@@ -139,35 +139,17 @@ export default function ProductList() {
                   <p className="mt-2 text-gray-500 text-sm line-clamp-2">
                     {product.Description}
                   </p>
-                  <div className="mt-4 flex items-center justify-between">
+                  <div className="mt-4">
                     <span className="text-lg font-bold text-gray-900">
                       Rs. {product.Price.toLocaleString()}
-                    </span>
-                    <span
-                      className={`px-3 py-1 text-xs font-medium rounded-full ${
-                        product.Stock > 0
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}
-                    >
-                      {product.Stock > 0 ? `${product.Stock} in stock` : 'Out of stock'}
                     </span>
                   </div>
 
                   <button
-                    onClick={() => {
-                      if (product.Stock > 0) {
-                        window.location.href = '/payment';
-                      }
-                    }}
-                    className={`block text-center w-full mt-4 py-2 rounded ${
-                      product.Stock > 0
-                        ? 'bg-blue-500 text-white hover:bg-blue-600'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    } transition`}
-                    disabled={product.Stock === 0}
+                    onClick={() => window.location.href = '/payment'}
+                    className="block text-center w-full mt-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 transition"
                   >
-                    {product.Stock > 0 ? 'Buy Now' : 'Out of Stock'}
+                    Buy Now
                   </button>
 
                   <button
