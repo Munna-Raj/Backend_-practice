@@ -8,6 +8,7 @@ import ProductTable from "./component/ProductTable.jsx";
 import Users from "./component/Users.jsx";
 import AddProduct from "./component/AddProduct.jsx";
 import AdminLogin from "./component/AdminLogin.jsx";
+import AdminOrders from "./component/AdminOrders.jsx";
 
 // Layout component that conditionally shows AdminNav
 function Layout({ children }) {
@@ -35,6 +36,7 @@ function App() {
           <Route path="/products" element={<ProductTable />} />
           <Route path="/users" element={<Users />} />
           <Route path="/addproduct" element={<AddProduct />} />
+          <Route path="/orders" element={<AdminOrders />} />
         </Routes>
       </Layout>
     </BrowserRouter>
